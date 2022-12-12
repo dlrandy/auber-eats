@@ -1,0 +1,85 @@
+{
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/nx-cloud",
+      "options": {
+        "cacheableOperations": [
+          "prebuild",
+          "build",
+          "format",
+          "lint",
+          "test:cov",
+          "test:e2e"
+        ],
+        "accessToken": "MTA1YTUzYTktMzk4My00YjIzLTg4NDQtNTI2M2MwODQwMDhkfHJlYWQtd3JpdGU="
+      }
+    }
+  },
+  "affected":{
+    "defaultBase":"main"
+  },
+  "namedInputs":{
+    "noMarkdown":["!{projectRoot}/**/*.md"]
+  },
+  "targetDefaults": {
+    "dev": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "{projectRoot}/dev"
+      ]
+    },
+    "prebuild": {
+      "dependsOn": [
+        "^prebuild"
+      ],
+      "outputs": [
+        "{projectRoot}/prebuild"
+      ]
+    },
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs":["noMarkdown","^noMarkdown"],
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    },
+    "format": {
+      "dependsOn": [
+        "^format"
+      ],
+      "outputs": [
+        "{projectRoot}/format"
+      ]
+    },
+    "lint": {
+      "dependsOn": [
+        "^lint"
+      ],
+      "outputs": [
+        "{projectRoot}/lint"
+      ]
+    },
+    "test:cov": {
+      "dependsOn": [
+        "^test:cov"
+      ],
+      "inputs":["noMarkdown"],
+      "outputs": [
+        "{projectRoot}/test:cov"
+      ]
+    },
+    "test:e2e": {
+      "dependsOn": [
+        "^test:e2e"
+      ],
+      "outputs": [
+        "{projectRoot}/test:e2e"
+      ]
+    }
+  },
+  "defaultBase": "main"
+}
