@@ -1,12 +1,22 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
-import { RestaurantsModule } from './restaurants/restaurants.module';
+// import { RestaurantsModule } from './restaurants/restaurants.module';
 import * as Joi from 'joi';
-import { Restaurant } from './restaurants/entities/restaurant.entity';
+// import { Restaurant } from './restaurants/entities/restaurant.entity';
+import { UsersModule } from './users/users.module';
+import { CommonModule } from './common/common.module';
+import { User } from './users/entities/user.entity';
+import { JwtModule } from './jwt/jwt.module';
+import { JwtMiddleware } from './jwt/jwt.middleware';
 
 @Module({
   imports: [
@@ -24,6 +34,7 @@ import { Restaurant } from './restaurants/entities/restaurant.entity';
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
+        TOKEN_SECRET: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -35,17 +46,31 @@ import { Restaurant } from './restaurants/entities/restaurant.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'production',
       logging: process.env.NODE_ENV !== 'production',
-      entities: [Restaurant],
+      // entities: [Restaurant],
+      entities: [User],
       subscribers: [],
       migrations: [],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       driver: ApolloDriver,
+      context: ({ req }) => ({ user: req['user'] }),
     }),
-    RestaurantsModule,
+    // RestaurantsModule,
+    UsersModule,
+    CommonModule,
+    JwtModule.forRoot({
+      privateKey: process.env.TOKEN_SECRET,
+    }),
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JwtMiddleware).forRoutes({
+      path: '/graphql',
+      method: RequestMethod.ALL,
+    });
+  }
+}

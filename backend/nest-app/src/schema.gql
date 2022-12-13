@@ -2,36 +2,46 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Restaurant {
-  id: Float!
-  name: String!
-  isVegan: Boolean
-  address: String!
-  ownersName: String!
-  categoryName: String!
+type User {
+  email: String!
+  password: String!
+  role: UserRole!
+}
+
+enum UserRole {
+  Client
+  Owner
+  Delivery
+}
+
+type CreateAccountOutput {
+  error: String
+  ok: Boolean!
+}
+
+type LoginAccountOutput {
+  error: String
+  ok: Boolean!
+  token: String
 }
 
 type Query {
-  restaurants(veganOnly: Boolean!): [Restaurant!]!
+  hi: Boolean!
+  me: User!
 }
 
 type Mutation {
-  createRestaurant(input: CreateRestaurantDto!): Boolean!
-  updateRestaurant(id: Float!, data: UpdateRestaurantInputType!): Boolean!
+  createAccount(input: CreateAccountInput!): CreateAccountOutput!
+  loginAccount(input: LoginAccountInput!): LoginAccountOutput!
 }
 
-input CreateRestaurantDto {
-  name: String!
-  isVegan: Boolean = true
-  address: String!
-  ownersName: String!
-  categoryName: String!
+input CreateAccountInput {
+  email: String!
+  password: String!
+  role: UserRole!
 }
 
-input UpdateRestaurantInputType {
-  name: String
-  isVegan: Boolean = true
-  address: String
-  ownersName: String
-  categoryName: String
+input LoginAccountInput {
+  email: String!
+  password: String!
 }
