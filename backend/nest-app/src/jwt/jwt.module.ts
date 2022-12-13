@@ -10,6 +10,7 @@ export class JwtModule {
     return {
       module: JwtModule,
       exports: [JwtService],
+      /*providers */
       providers: [
         {
           provide: CONFIG_OPTIONS,

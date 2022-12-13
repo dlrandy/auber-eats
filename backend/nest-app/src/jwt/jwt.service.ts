@@ -7,6 +7,7 @@ import { JwtModuleOptions } from './jwt.interface';
 @Injectable()
 export class JwtService {
   constructor(
+    /*Depencdency injection */
     @Inject(CONFIG_OPTIONS) private readonly options: JwtModuleOptions, // private readonly configService: ConfigService
   ) {}
   hello() {

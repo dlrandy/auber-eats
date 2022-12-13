@@ -17,6 +17,7 @@ import { CommonModule } from './common/common.module';
 import { User } from './users/entities/user.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -54,14 +55,17 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       driver: ApolloDriver,
+      /* context */
       context: ({ req }) => ({ user: req['user'] }),
     }),
     // RestaurantsModule,
     UsersModule,
     CommonModule,
+    /* dynamic modules */
     JwtModule.forRoot({
       privateKey: process.env.TOKEN_SECRET,
     }),
+    // AuthModule,
   ],
   controllers: [],
   providers: [],
