@@ -27,4 +27,4 @@ pnpx nx graph
 npx nx affected:<target>    build|test
 npx nx affected:graph --base=main
 
-
+https://gitmoji.dev/
