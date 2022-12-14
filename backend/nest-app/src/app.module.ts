@@ -38,6 +38,9 @@ import { MailModule } from './mail/mail.module';
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
         TOKEN_SECRET: Joi.string().required(),
+        MAILGUN_API_KEY: Joi.string().required(),
+        MAILGUN_DOMAIN_NAME: Joi.string().required(),
+        MAILGUN_FROM_EMAIL: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -67,7 +70,11 @@ import { MailModule } from './mail/mail.module';
     JwtModule.forRoot({
       privateKey: process.env.TOKEN_SECRET,
     }),
-    MailModule,
+    MailModule.forRoot({
+      apiKey: process.env.MAILGUN_API_KEY,
+      domain: process.env.MAILGUN_DOMAIN_NAME,
+      fromEmail: process.env.MAILGUN_FROM_EMAIL,
+    }),
     // AuthModule,
   ],
   controllers: [],
