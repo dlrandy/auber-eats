@@ -8,6 +8,7 @@ import {
   LoginAccountOutput,
 } from './dtos/login-account.dto';
 import { JwtService } from '../jwt/jwt.service';
+import { EditUserProfileInput } from './dtos/edit-profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -69,5 +70,21 @@ export class UsersService {
   }
   async findById(id: number) {
     return this.users.findOneBy({ id });
+  }
+
+  async editProfile(
+    userId: number,
+    editUserProfileInput: EditUserProfileInput,
+  ): Promise<User> {
+    const user = await this.users.findOneBy({ id: userId });
+    for (const key in editUserProfileInput) {
+      if (Object.prototype.hasOwnProperty.call(editUserProfileInput, key)) {
+        const element = editUserProfileInput[key];
+        user[key] = element;
+      }
+    }
+    return this.users.save(user);
+    // not trigger beforeUpdate
+    // return this.users.update({ id: userId }, { ...editUserProfileInput });
   }
 }

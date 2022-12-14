@@ -3,10 +3,18 @@
 # ------------------------------------------------------
 
 type User {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   email: String!
   password: String!
   role: UserRole!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 enum UserRole {
   Client
@@ -25,14 +33,27 @@ type LoginAccountOutput {
   token: String
 }
 
+type UserProfileOutput {
+  error: String
+  ok: Boolean!
+  user: User
+}
+
+type EditUserProfileOutput {
+  error: String
+  ok: Boolean!
+}
+
 type Query {
   hi: Boolean!
   me: User!
+  userProfile(userId: Float!): UserProfileOutput!
 }
 
 type Mutation {
   createAccount(input: CreateAccountInput!): CreateAccountOutput!
   loginAccount(input: LoginAccountInput!): LoginAccountOutput!
+  editUserProfile(input: EditUserProfileInput!): EditUserProfileOutput!
 }
 
 input CreateAccountInput {
@@ -44,4 +65,9 @@ input CreateAccountInput {
 input LoginAccountInput {
   email: String!
   password: String!
+}
+
+input EditUserProfileInput {
+  email: String
+  password: String
 }
