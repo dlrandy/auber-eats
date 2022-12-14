@@ -9,11 +9,14 @@ import {
 } from './dtos/login-account.dto';
 import { JwtService } from '../jwt/jwt.service';
 import { EditUserProfileInput } from './dtos/edit-profile.dto';
+import { Verification } from './entities/verification.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly users: Repository<User>,
+    @InjectRepository(Verification)
+    private readonly verifications: Repository<Verification>,
     private readonly jwtService: JwtService,
   ) {
     this.jwtService.hello();
@@ -28,7 +31,14 @@ export class UsersService {
       if (exists) {
         return { ok: false, error: 'email exists.' };
       }
-      await this.users.save(this.users.create({ email, password, role }));
+      const user = await this.users.save(
+        this.users.create({ email, password, role }),
+      );
+      await this.verifications.save(
+        this.verifications.create({
+          user,
+        }),
+      );
       return { ok: true };
     } catch (error) {
       return { ok: false, error: 'create user wromg.' };
@@ -38,8 +48,9 @@ export class UsersService {
     loginAccountInput: LoginAccountInput,
   ): Promise<LoginAccountOutput> {
     try {
-      const user = await this.users.findOneBy({
-        email: loginAccountInput.email,
+      const user = await this.users.findOne({
+        where: { email: loginAccountInput.email },
+        select: ['id', 'password'],
       });
       if (!user) {
         return {
@@ -83,8 +94,38 @@ export class UsersService {
         user[key] = element;
       }
     }
+    if (editUserProfileInput.email) {
+      user.verified = false;
+      await this.verifications.save(
+        this.verifications.create({
+          user,
+        }),
+      );
+    }
     return this.users.save(user);
     // not trigger beforeUpdate
     // return this.users.update({ id: userId }, { ...editUserProfileInput });
+  }
+
+  async verifyEmail(code: string): Promise<boolean> {
+    try {
+      const verification = await this.verifications.findOne({
+        where: { code },
+        relations: ['user'],
+        // loadRelationIds: true,
+      });
+      if (verification) {
+        console.log('verification ', verification, verification.user);
+        verification.user.verified = true;
+        console.log('verification --', verification.user);
+        await this.users.save(this.users.create(verification.user));
+        await this.verifications.delete(verification.id);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.log('error ', error);
+      return false;
+    }
   }
 }

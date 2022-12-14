@@ -24,7 +24,7 @@ export class User extends CommonEntity {
   @Field((type) => String)
   @IsEmail()
   email: string;
-  @Column()
+  @Column({ select: false })
   @Field((type) => String)
   @IsString()
   password: string;
@@ -32,15 +32,18 @@ export class User extends CommonEntity {
   @Field((type) => UserRole)
   @IsEnum(UserRole)
   role: UserRole;
+  @Column({ default: false })
+  @Field((type) => Boolean)
+  verified: boolean;
 
   @BeforeUpdate()
   @BeforeInsert()
   async hashPassword(): Promise<any> {
-    console.log('====================================');
-    console.log('hahsssssssss', this.password);
-    console.log('====================================');
     try {
-      this.password = await bcrypt.hash(this.password, 10);
+      // select: false alternative
+      if (this.password) {
+        this.password = await bcrypt.hash(this.password, 10);
+      }
     } catch (error) {
       throw new InternalServerErrorException('password hash error');
     }
