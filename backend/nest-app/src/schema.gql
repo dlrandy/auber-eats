@@ -10,6 +10,7 @@ type Category {
   coverImage: String
   slug: String!
   restaurants: [Restaurant!]!
+  restaurantCount: Int!
 }
 
 """
@@ -77,14 +78,85 @@ type CreateRestaurantOutput {
   ok: Boolean!
 }
 
+type AllCategoriesOutput {
+  error: String
+  ok: Boolean!
+  categories: [Category!]
+}
+
+type EditRestaurantOutput {
+  error: String
+  ok: Boolean!
+}
+
+type DeleteRestaurantOutput {
+  error: String
+  ok: Boolean!
+}
+
+type CategoryOutput {
+  error: String
+  ok: Boolean!
+  totalPages: Int
+  totalItems: Int
+  category: Category
+}
+
+type RestaurantsOutput {
+  error: String
+  ok: Boolean!
+  totalPages: Int
+  totalItems: Int
+  restaurants: [Restaurant!]
+}
+
+type RestaurantOutput {
+  error: String
+  ok: Boolean!
+  restaurant: Restaurant
+}
+
+type SearchRestaurantOutput {
+  error: String
+  ok: Boolean!
+  totalPages: Int
+  totalItems: Int
+  restaurants: [Restaurant!]
+}
+
 type Query {
+  allRestaurants(input: RestaurantsInput!): RestaurantsOutput!
+  searchRestaurants(input: SearchRestaurantInput!): SearchRestaurantOutput!
+  restaurant(input: RestaurantInput!): RestaurantOutput!
+  allCategories: AllCategoriesOutput!
+  category(input: CategoryInput!): CategoryOutput!
   hi: Boolean!
   me: User!
   userProfile(userId: Float!): UserProfileOutput!
 }
 
+input RestaurantsInput {
+  page: Int! = 1
+}
+
+input SearchRestaurantInput {
+  page: Int! = 1
+  query: String!
+}
+
+input RestaurantInput {
+  restaurantId: Int!
+}
+
+input CategoryInput {
+  page: Int! = 1
+  slug: String!
+}
+
 type Mutation {
   createRestaurant(input: CreateRestaurantInput!): CreateRestaurantOutput!
+  editRestaurant(input: EditRestaurantInput!): EditRestaurantOutput!
+  deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantOutput!
   createAccount(input: CreateAccountInput!): CreateAccountOutput!
   loginAccount(input: LoginAccountInput!): LoginAccountOutput!
   editUserProfile(input: EditUserProfileInput!): EditUserProfileOutput!
@@ -96,6 +168,22 @@ input CreateRestaurantInput {
   address: String!
   coverImage: String!
   categoryName: String!
+}
+
+input EditRestaurantInput {
+  name: String
+  address: String
+  coverImage: String
+  categoryName: String
+  restaurantId: Float!
+}
+
+input DeleteRestaurantInput {
+  name: String
+  address: String
+  coverImage: String
+  categoryName: String
+  restaurantId: Float!
 }
 
 input CreateAccountInput {
