@@ -18,6 +18,7 @@ import {
   EditUserProfileOutput,
 } from './dtos/edit-profile.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Resolver((of) => User)
 export class UserResolver {
@@ -56,7 +57,8 @@ export class UserResolver {
 
   // TODO: 待优化
   @Query((returns) => User)
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard) 使用了全局的guard， 这里不再需要了
+  @Roles(['any'])
   me(@AuthUser() authUser: User /*@Context() context*/) {
     console.log(authUser);
     return authUser;
@@ -67,7 +69,7 @@ export class UserResolver {
   }
 
   @Query((returns) => UserProfileOutput)
-  @UseGuards(AuthGuard)
+  @Roles(['any'])
   async userProfile(
     @Args() userProfileInput: UserProfileInput,
   ): Promise<UserProfileOutput> {
