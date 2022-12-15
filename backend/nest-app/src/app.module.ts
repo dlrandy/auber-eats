@@ -10,6 +10,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 // import { RestaurantsModule } from './restaurants/restaurants.module';
+import { Dish } from './restaurants/entities/dish.entity';
 import * as Joi from 'joi';
 // import { Restaurant } from './restaurants/entities/restaurant.entity';
 import { UsersModule } from './users/users.module';
@@ -56,7 +57,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
       synchronize: process.env.NODE_ENV !== 'production',
       logging: process.env.NODE_ENV !== 'production',
       // entities: [Restaurant],
-      entities: [User, Verification, Restaurant, Category],
+      entities: [User, Verification, Restaurant, Category, Dish],
       subscribers: [],
       migrations: [],
     }),

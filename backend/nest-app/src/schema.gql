@@ -18,17 +18,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Restaurant {
-  id: Float!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  address: String!
-  coverImage: String!
-  category: Category
-  owner: User!
-}
-
 type User {
   id: Float!
   createdAt: DateTime!
@@ -44,6 +33,43 @@ enum UserRole {
   Client
   Owner
   Delivery
+}
+
+type Restaurant {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  address: String!
+  coverImage: String!
+  category: Category
+  owner: User!
+  menu: [Dish!]!
+  isPromoted: Boolean!
+  promotedUntil: DateTime
+}
+
+type DishChoice {
+  name: String!
+  extra: Int
+}
+
+type DishOption {
+  name: String!
+  choices: [DishChoice!]
+  extra: Int
+}
+
+type Dish {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  price: Int!
+  photo: String
+  description: String!
+  restaurant: Restaurant!
+  options: [DishOption!]
 }
 
 type CreateAccountOutput {
@@ -124,6 +150,21 @@ type SearchRestaurantOutput {
   restaurants: [Restaurant!]
 }
 
+type CreateDishOutput {
+  error: String
+  ok: Boolean!
+}
+
+type DeleteDishOutput {
+  error: String
+  ok: Boolean!
+}
+
+type EditDishOutput {
+  error: String
+  ok: Boolean!
+}
+
 type Query {
   allRestaurants(input: RestaurantsInput!): RestaurantsOutput!
   searchRestaurants(input: SearchRestaurantInput!): SearchRestaurantOutput!
@@ -157,6 +198,9 @@ type Mutation {
   createRestaurant(input: CreateRestaurantInput!): CreateRestaurantOutput!
   editRestaurant(input: EditRestaurantInput!): EditRestaurantOutput!
   deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantOutput!
+  createDish(input: CreateDishInput!): CreateDishOutput!
+  editDish(input: EditDishInput!): EditDishOutput!
+  deleteDish(input: DeleteDishInput!): DeleteDishOutput!
   createAccount(input: CreateAccountInput!): CreateAccountOutput!
   loginAccount(input: LoginAccountInput!): LoginAccountOutput!
   editUserProfile(input: EditUserProfileInput!): EditUserProfileOutput!
@@ -184,6 +228,37 @@ input DeleteRestaurantInput {
   coverImage: String
   categoryName: String
   restaurantId: Float!
+}
+
+input CreateDishInput {
+  name: String!
+  price: Int!
+  description: String!
+  options: [DishOptionInputType!]
+  restaurantId: Int!
+}
+
+input DishOptionInputType {
+  name: String!
+  choices: [DishChoiceInputType!]
+  extra: Int
+}
+
+input DishChoiceInputType {
+  name: String!
+  extra: Int
+}
+
+input EditDishInput {
+  name: String
+  price: Int
+  description: String
+  options: [DishOptionInputType!]
+  dishId: Int!
+}
+
+input DeleteDishInput {
+  dishId: Int!
 }
 
 input CreateAccountInput {
