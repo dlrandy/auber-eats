@@ -28,6 +28,9 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
 import { OrdersModule } from './orders/orders.module';
 import { OrderItem } from './orders/entities/order-item.entity';
 import { Order } from './orders/entities/order.entity';
+import { PaymentsModule } from './payments/payments.module';
+import { Payment } from './payments/entities/payment.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -69,6 +72,7 @@ import { Order } from './orders/entities/order.entity';
         Dish,
         Order,
         OrderItem,
+        Payment,
       ],
       subscribers: [],
       migrations: [],
@@ -108,6 +112,8 @@ import { Order } from './orders/entities/order.entity';
     }),
     AuthModule,
     OrdersModule,
+    PaymentsModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [],
   providers: [],
