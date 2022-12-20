@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Nest Framework",
+     "program": "${workspaceFolder}/backend/nest-app/src/main.ts",
+      "runtimeArgs": ["--no-lazy", "-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+    //   "preLaunchTask": "tsc: watch - backend/nest-app/tsconfig.json",
+      "sourceMaps": true,
+      "envFile": "${workspaceFolder}/backend/nest-app/.env.development",
+      "cwd": "${workspaceRoot}/backend/nest-app/",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": [
+        "<node_internals>/**",
+        "node_modules/**"
+      ],
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/backend/nest-app/**",
+        "!**/node_modules/**" // Disable the "could not read source map" error for node_modules
+      ]
+    }
+  ]
+}

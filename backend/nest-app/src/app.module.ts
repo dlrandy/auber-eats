@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Context } from 'graphql-ws';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
@@ -24,6 +25,9 @@ import { MailModule } from './mail/mail.module';
 import { Category } from './restaurants/entities/category.entity';
 import { Restaurant } from './restaurants/entities/restaurant.entity';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import { OrdersModule } from './orders/orders.module';
+import { OrderItem } from './orders/entities/order-item.entity';
+import { Order } from './orders/entities/order.entity';
 
 @Module({
   imports: [
@@ -57,15 +61,38 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
       synchronize: process.env.NODE_ENV !== 'production',
       logging: process.env.NODE_ENV !== 'production',
       // entities: [Restaurant],
-      entities: [User, Verification, Restaurant, Category, Dish],
+      entities: [
+        User,
+        Verification,
+        Restaurant,
+        Category,
+        Dish,
+        Order,
+        OrderItem,
+      ],
       subscribers: [],
       migrations: [],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
+      installSubscriptionHandlers: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       driver: ApolloDriver,
       /* context */
-      context: ({ req }) => ({ user: req['user'] }),
+      context: ({ req, connection }) => {
+        if (connection) {
+          return connection.context;
+        }
+        return { token: req.headers['x-jwt'] };
+      },
+      playground: true,
+      subscriptions: {
+        'subscriptions-transport-ws': {
+          path: '/graphql',
+          onConnect: (connectionParams) => {
+            return { token: connectionParams['X-JWT'] };
+          },
+        },
+      },
     }),
     RestaurantsModule,
     UsersModule,
@@ -80,15 +107,16 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
     AuthModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule {
+export class AppModule {} /*  implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(JwtMiddleware).forRoutes({
       path: '/graphql',
       method: RequestMethod.ALL,
     });
   }
-}
+}*/

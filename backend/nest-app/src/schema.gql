@@ -18,6 +18,39 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type OrderItemOption {
+  name: String!
+  choice: String
+}
+
+type OrderItem {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  dish: Dish!
+  options: [OrderItemOption!]
+}
+
+type Order {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  customer: User
+  driver: User
+  restaurant: Restaurant
+  items: [OrderItem!]!
+  total: Float
+  status: OrderStatus!
+}
+
+enum OrderStatus {
+  Pending
+  Cooking
+  Cooked
+  PickedUp
+  Delivered
+}
+
 type User {
   id: Float!
   createdAt: DateTime!
@@ -27,12 +60,15 @@ type User {
   role: UserRole!
   verified: Boolean!
   restaurants: [Restaurant!]!
+  orders: [Order!]!
+  rides: [Order!]!
 }
 
 enum UserRole {
   Client
   Owner
   Delivery
+  Any
 }
 
 type Restaurant {
@@ -45,6 +81,7 @@ type Restaurant {
   category: Category
   owner: User!
   menu: [Dish!]!
+  orders: [Order!]!
   isPromoted: Boolean!
   promotedUntil: DateTime
 }
@@ -165,6 +202,34 @@ type EditDishOutput {
   ok: Boolean!
 }
 
+type CreateOrderOutput {
+  error: String
+  ok: Boolean!
+  orderId: Int
+}
+
+type EditOrderOutput {
+  error: String
+  ok: Boolean!
+}
+
+type GetOrderOutput {
+  error: String
+  ok: Boolean!
+  order: Order
+}
+
+type GetOrdersOutput {
+  error: String
+  ok: Boolean!
+  orders: [Order!]
+}
+
+type TakeOrderOutput {
+  error: String
+  ok: Boolean!
+}
+
 type Query {
   allRestaurants(input: RestaurantsInput!): RestaurantsOutput!
   searchRestaurants(input: SearchRestaurantInput!): SearchRestaurantOutput!
@@ -174,6 +239,8 @@ type Query {
   hi: Boolean!
   me: User!
   userProfile(userId: Float!): UserProfileOutput!
+  getOrders(input: GetOrdersInput!): GetOrdersOutput!
+  getOrder(input: GetOrderInput!): GetOrderOutput!
 }
 
 input RestaurantsInput {
@@ -194,6 +261,14 @@ input CategoryInput {
   slug: String!
 }
 
+input GetOrdersInput {
+  status: OrderStatus
+}
+
+input GetOrderInput {
+  id: Float!
+}
+
 type Mutation {
   createRestaurant(input: CreateRestaurantInput!): CreateRestaurantOutput!
   editRestaurant(input: EditRestaurantInput!): EditRestaurantOutput!
@@ -205,6 +280,10 @@ type Mutation {
   loginAccount(input: LoginAccountInput!): LoginAccountOutput!
   editUserProfile(input: EditUserProfileInput!): EditUserProfileOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
+  createOrder(input: CreateOrderInput!): CreateOrderOutput!
+  editOrder(input: EditOrderInput!): EditOrderOutput!
+  pubsubReady(id: Float!): Boolean!
+  takeOrder(input: TakeOrderInput!): TakeOrderOutput!
 }
 
 input CreateRestaurantInput {
@@ -279,4 +358,38 @@ input EditUserProfileInput {
 
 input VerifyEmailInput {
   code: String!
+}
+
+input CreateOrderInput {
+  restaurantId: Int!
+  items: [CreateOrderItemInput!]!
+}
+
+input CreateOrderItemInput {
+  dishId: Int!
+  options: [OrderItemOptionInputType!]
+}
+
+input OrderItemOptionInputType {
+  name: String!
+  choice: String
+}
+
+input EditOrderInput {
+  id: Float!
+  status: OrderStatus!
+}
+
+input TakeOrderInput {
+  id: Float!
+}
+
+type Subscription {
+  pendingOrders: Order!
+  cookedOrders: Order!
+  orderUpdates(input: OrderUpdatesInput!): Order!
+}
+
+input OrderUpdatesInput {
+  id: Float!
 }

@@ -13,8 +13,8 @@ import {
   CreateRestaurantOutput,
 } from './dtos/create-restaurant.dto';
 import { RestaurantService } from './restaurants.service';
-import { User } from 'src/users/entities/user.entity';
-import { AuthUser } from 'src/auth/auth-user.decorator';
+import { User } from './../users/entities/user.entity';
+import { AuthUser } from './../auth/auth-user.decorator';
 // import { SetMetadata } from '@nestjs/common';
 import { UserRole } from '../users/entities/user.entity';
 import { Roles } from 'src/auth/roles.decorator';

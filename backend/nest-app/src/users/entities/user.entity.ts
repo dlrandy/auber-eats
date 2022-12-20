@@ -16,10 +16,12 @@ import {
   IsString,
 } from 'class-validator';
 import { Restaurant } from '../../restaurants/entities/restaurant.entity';
+import { Order } from 'src/orders/entities/order.entity';
 export enum UserRole {
   Client = 'Client',
   Owner = 'Owner',
   Delivery = 'Delivery',
+  Any = 'Any',
 }
 
 registerEnumType(UserRole, { name: 'UserRole' });
@@ -47,6 +49,13 @@ export class User extends CommonEntity {
   @OneToMany((type) => Restaurant, (restaurant) => restaurant.owner)
   restaurants: Restaurant[];
 
+  @Field((type) => [Order])
+  @OneToMany((type) => Order, (order) => order.customer)
+  orders: Order[];
+
+  @Field((type) => [Order])
+  @OneToMany((type) => Order, (order) => order.driver)
+  rides: number[];
   @BeforeUpdate()
   @BeforeInsert()
   async hashPassword(): Promise<any> {
