@@ -15,6 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\nquery isLoggedIn {\n  isLoggedIn @client\n}": types.IsLoggedInDocument,
     "\n  mutation Login($loginInput: LoginAccountInput!) {\n    loginAccount(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
+    "\n  mutation SignUp($signUpInput: CreateAccountInput!) {\n    createAccount(input: $signUpInput) {\n      ok\n      error\n    }\n  }\n": types.SignUpDocument,
 };
 
 /**
@@ -25,6 +26,10 @@ export function graphql(source: "\nquery isLoggedIn {\n  isLoggedIn @client\n}")
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation Login($loginInput: LoginAccountInput!) {\n    loginAccount(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation Login($loginInput: LoginAccountInput!) {\n    loginAccount(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation SignUp($signUpInput: CreateAccountInput!) {\n    createAccount(input: $signUpInput) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation SignUp($signUpInput: CreateAccountInput!) {\n    createAccount(input: $signUpInput) {\n      ok\n      error\n    }\n  }\n"];
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
