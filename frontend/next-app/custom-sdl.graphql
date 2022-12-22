@@ -1,0 +1,6 @@
+# see: https://www.apollographql.com/docs/react/local-state/managing-state-with-field-policies/
+directive @client on FIELD
+
+extend type Query {
+  isLoggedIn: Boolean
+}
