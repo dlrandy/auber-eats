@@ -3,4 +3,5 @@ directive @client on FIELD
 
 extend type Query {
   isLoggedIn: Boolean
+  token:String
 }

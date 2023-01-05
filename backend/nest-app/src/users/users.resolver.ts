@@ -10,7 +10,7 @@ import {
   LoginAccountInput,
   LoginAccountOutput,
 } from './dtos/login-account.dto';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
 import {
@@ -58,7 +58,7 @@ export class UserResolver {
   // TODO: 待优化
   @Query((returns) => User)
   // @UseGuards(AuthGuard) 使用了全局的guard， 这里不再需要了
-  @Roles(['any'])
+  @Roles([UserRole.Any])
   me(@AuthUser() authUser: User /*@Context() context*/) {
     console.log(authUser);
     return authUser;
@@ -69,7 +69,7 @@ export class UserResolver {
   }
 
   @Query((returns) => UserProfileOutput)
-  @Roles(['any'])
+  @Roles([UserRole.Any])
   async userProfile(
     @Args() userProfileInput: UserProfileInput,
   ): Promise<UserProfileOutput> {
@@ -90,6 +90,7 @@ export class UserResolver {
     }
   }
   @Mutation((returns) => EditUserProfileOutput)
+  @Roles([UserRole.Any])
   @UseGuards(AuthGuard)
   async editUserProfile(
     @AuthUser() authUser: User,
@@ -111,8 +112,9 @@ export class UserResolver {
   @Mutation((returns) => VerifyEmailOutput)
   async verifyEmail(@Args('input') verifyEmailInput: VerifyEmailInput) {
     try {
-      await this.usersService.verifyEmail(verifyEmailInput.code);
-      return { ok: true };
+      const ok = await this.usersService.verifyEmail(verifyEmailInput.code);
+      const error = ok == false ? 'verify wrong,please try again' : null;
+      return { ok, error };
     } catch (error) {
       return {
         ok: false,

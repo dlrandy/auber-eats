@@ -30,6 +30,7 @@
     "@nestjs/schedule": "^2.1.0",
     "@nestjs/typeorm": "^9.0.1",
     "@types/cron": "^2.0.0",
+    "apollo-server-core": "^3.11.1",
     "apollo-server-express": "^3.11.1",
     "aws-sdk": "^2.1278.0",
     "bcrypt": "^5.1.0",

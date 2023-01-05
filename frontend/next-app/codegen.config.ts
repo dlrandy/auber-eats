@@ -2,7 +2,7 @@ import { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
     schema: ['custom-sdl.graphql','http://localhost:4000/graphql',],
-    documents: ['components/**/*.tsx','pages/**/*.tsx', '!gql/**/*'],
+    documents: ['hooks/**/*.ts','components/**/*.tsx','pages/**/*.tsx', '!gql/**/*'],
     // emitLegacyCommonJSImports: false,
     overwrite: true,
     ignoreNoDocuments: true, // for better experience with the watcher

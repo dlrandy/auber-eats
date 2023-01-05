@@ -33,6 +33,7 @@ importers:
       '@types/supertest': ^2.0.11
       '@typescript-eslint/eslint-plugin': ^5.0.0
       '@typescript-eslint/parser': ^5.0.0
+      apollo-server-core: ^3.11.1
       apollo-server-express: ^3.11.1
       aws-sdk: ^2.1278.0
       bcrypt: ^5.1.0
@@ -64,7 +65,7 @@ importers:
       typeorm: ^0.3.11
       typescript: ^4.7.4
     dependencies:
-      '@nestjs/apollo': 10.1.7_tpwn4hddvkpc7u2xxgf2i2zgny
+      '@nestjs/apollo': 10.1.7_abtkaagqsgvel2ybqxmuekbriy
       '@nestjs/common': 9.2.1_537f4dyna5eqdupcxnvaoq3vwa
       '@nestjs/config': 2.2.0_wqmgrsh4vfci5e6jx45m6crmsi
       '@nestjs/core': 9.2.1_ajc4cvdydchgvxyi4xnoij5t4i
@@ -73,6 +74,7 @@ importers:
       '@nestjs/schedule': 2.1.0_dntc3uqqknzoduyjojusds5kla
       '@nestjs/typeorm': 9.0.1_mftfacht74hczh4so74rsxvzxq
       '@types/cron': 2.0.0
+      apollo-server-core: 3.11.1_graphql@16.6.0
       apollo-server-express: 3.11.1_graphql@16.6.0
       aws-sdk: 2.1278.0
       bcrypt: 5.1.0
@@ -141,6 +143,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       react-hook-form: ^7.41.0
+      react-icons: ^4.7.1
       shared-tools: workspace:^1.0.0
       tailwindcss: ^3.2.4
       typescript: 4.9.4
@@ -160,6 +163,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-hook-form: 7.41.0_react@18.2.0
+      react-icons: 4.7.1_react@18.2.0
       shared-tools: link:../../packages/shared-tools
     devDependencies:
       '@graphql-codegen/cli': 2.16.1_dl3nlj5afe4yd6kftus5b5umdm
@@ -2286,7 +2290,7 @@ packages:
       - supports-color
     dev: false
 
-  /@nestjs/apollo/10.1.7_tpwn4hddvkpc7u2xxgf2i2zgny:
+  /@nestjs/apollo/10.1.7_abtkaagqsgvel2ybqxmuekbriy:
     resolution: {integrity: sha512-UQDgUgyJvrj53AcCzws6/854SVibAeyg+RGxMtb9+ENhd8snP6f7RS6mCaFY85UTAc6mo674NIUu9a/JyeYezw==}
     peerDependencies:
       '@apollo/gateway': ^0.44.1 || ^0.46.0 || ^0.48.0 || ^0.49.0 || ^0.50.0 || ^2.0.0
@@ -2310,6 +2314,7 @@ packages:
       '@nestjs/common': 9.2.1_537f4dyna5eqdupcxnvaoq3vwa
       '@nestjs/core': 9.2.1_ajc4cvdydchgvxyi4xnoij5t4i
       '@nestjs/graphql': 10.1.7_urhyahvzvempfjm3smbecys5j4
+      apollo-server-core: 3.11.1_graphql@16.6.0
       apollo-server-express: 3.11.1_graphql@16.6.0
       graphql: 16.6.0
       iterall: 1.3.0
@@ -8427,6 +8432,14 @@ packages:
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /react-icons/4.7.1_react@18.2.0:
+    resolution: {integrity: sha512-yHd3oKGMgm7zxo3EA7H2n7vxSoiGmHk5t6Ou4bXsfcgWyhfDKMpyKfhHR6Bjnn63c+YXBLBPUql9H4wPJM6sXw==}
+    peerDependencies:
+      react: '*'
     dependencies:
       react: 18.2.0
     dev: false
