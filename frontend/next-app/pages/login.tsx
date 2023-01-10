@@ -8,8 +8,11 @@ import styles from "../styles/login.module.css";
 import { graphql } from "../gql/gql";
 import { LoginMutation, LoginMutationVariables } from "../gql/graphql";
 import { Button } from "../components/Button/button";
-import { isLoggedInVar } from '../lib/apolloClient';
+import { authTokenVar, isLoggedInVar } from '../lib/apolloClient';
 import { emailPatern } from '../common/patterns';
+import { LOCALSTORAGE_TOKEN } from "../common/constants";
+import { setLocalStorageItem } from "../utilities/localStorage";
+import { useDarkModeContext } from "../contexts/ModeContext";
 interface ILoginForm {
   email: string;
   password: string;
@@ -45,6 +48,8 @@ export default function Login() {
       } = data;
       if (ok && token) {
         isLoggedInVar(true);
+        setLocalStorageItem(LOCALSTORAGE_TOKEN, token);
+        authTokenVar(token);
       } else {
         isLoggedInVar(false);
       }
@@ -66,8 +71,10 @@ export default function Login() {
       });
     }
   };
+  const theme = useDarkModeContext();
+  
   return (
-    <div className="h-screen flex items-center flex-col  justify-center  bg-gray-800">
+    <div className={`${theme} h-screen flex items-center flex-col  justify-center  bg-gray-800`}>
       <Head>
         <title>Login | Auber Eats</title>
         <meta name="description" content={`Auber eats`} />

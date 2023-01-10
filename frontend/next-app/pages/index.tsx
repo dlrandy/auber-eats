@@ -5,6 +5,10 @@ import styles from '../styles/Home.module.css'
 import { useReactiveVar } from '@apollo/client';
 import { isLoggedInVar } from '../lib/apolloClient';
 import { graphql } from '../gql/gql';
+import { Header } from '../components/Header/Header';
+import { DarkModeToggle } from '../components/Toggle/DarkMode';
+import { useContext } from 'react';
+import { DarkModeContext, useDarkModeContext } from '../contexts/ModeContext';
 const inter = Inter({ subsets: ['latin'] })
 
 const IS_LOGGED_IN = graphql(/* GraphQL */ `
@@ -23,6 +27,7 @@ export default function Home() {
     isLoggedInVar(true);
   }
   console.log("isLoggedIn ", isLoggedIn);
+  const themeContext =useDarkModeContext();
   return (
     <>
       <Head>
@@ -31,9 +36,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
+      <main className={`${styles.main} ${themeContext}`}>
+    
         {isLoggedIn ? '1' : '2'}
         <button onClick={onClick}>Click</button>
+        <DarkModeToggle />
       </main>
     </>
   )

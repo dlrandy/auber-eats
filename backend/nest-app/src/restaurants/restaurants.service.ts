@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Like, Raw, Repository } from 'typeorm';
@@ -60,18 +61,18 @@ export class RestaurantService {
           isPromoted: 'DESC',
         },
       });
-      category.restaurants = restaurants;
       const totalRestaurantsInCategory = await this.countRestaurant(category);
       return {
         ok: true,
         category,
+        restaurants,
         totalPages: Math.ceil(totalRestaurantsInCategory / 25),
       };
     } catch (error) {
       console.log('error ', error);
       return {
         ok: false,
-        error: 'delete restaurant something wrong',
+        error: 'could not load category',
       };
     }
   }

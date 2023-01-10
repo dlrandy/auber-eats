@@ -1,9 +1,12 @@
 import { useMemo } from 'react'
 import { ApolloClient, HttpLink, InMemoryCache, from, NormalizedCacheObject, makeVar } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error'
 import { concatPagination } from '@apollo/client/utilities'
 import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
+import { LOCALSTORAGE_TOKEN } from '../common/constants'
+import { getLocalStorageItem } from '../utilities/localStorage';
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
@@ -22,13 +25,23 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 const httpLink = new HttpLink({
   uri: 'http://localhost:4000/graphql', // Server URL (must be absolute)
 //   credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
-})
+});
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      "x-jwt": authTokenVar() || "",
+    },
+  };
+});
 
-export const isLoggedInVar = makeVar(false);
+const token = getLocalStorageItem(LOCALSTORAGE_TOKEN);
+export const isLoggedInVar = makeVar(Boolean(token));
+export const authTokenVar = makeVar(token);
 function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
-    link: from([errorLink, httpLink]),
+    link: from([errorLink, authLink.concat(httpLink)]),
     cache: new InMemoryCache({
       typePolicies: {
         Query: {
@@ -37,6 +50,11 @@ function createApolloClient() {
                 read(){
                     return isLoggedInVar()
                 }
+            },
+            token: {
+              read() {
+                return authTokenVar();
+              },
             },
           },
         },

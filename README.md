@@ -15,7 +15,7 @@ nx <target> <project>
 nx  run <projext>:<target>
 pnpx nx build next-app
 pnpx nx run-many --target=build --projects=next-app,nest-app
-pnpx nx run-many --target=dev 
+pnpx nx run-many --target=dev --projects=next-app,nest-app
 pnpx nx init
 pnpx nx graph
 
