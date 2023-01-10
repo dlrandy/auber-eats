@@ -28,10 +28,28 @@ interface ICategoryParams {
   categoryId: string;
 }
 
+import { addApolloState, initializeApollo } from "../../../lib/apolloClient";
+
+const apolloClient = initializeApollo();
 export const getServerSideProps: GetServerSideProps<{ params: ICategoryParams }> = async(context) => {
-    return {
-        props: { params: {categoryId:context.params?.categoryId as string} }, // will be passed to the page component as props
-      }
+  let params: ICategoryParams = {
+    categoryId: context.params?.categoryId as string || '',
+  };
+  await apolloClient.query<CategoryQuery, CategoryQueryVariables>({
+    query: CATEGORY_QUERY,
+    variables: {
+      input: {
+        page: 1,
+        slug:params.categoryId,
+      },
+    },
+  });
+
+  console.log({ params });
+  
+  return addApolloState(apolloClient, {
+    props: { params }, // will be passed to the page component as props
+  });
   }
 
  const Category:React.FC<{params:ICategoryParams}> = ({params}) => {

@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { ApolloQueryResult, gql, useMutation, useQuery } from "@apollo/client";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -7,14 +7,20 @@ import React, { useState } from "react";
 import { Dish } from "../../../components/Dish/Dish";
 import { DishOption } from "../../../components/DishOption/DishOption";
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../../fragments";
-import { CreateOrderMutation, CreateOrderMutationVariables, CreateOrderOutput } from '../../../gql/graphql';
+import {
+  CreateOrderMutation,
+  CreateOrderMutationVariables,
+  CreateOrderOutput,
+} from "../../../gql/graphql";
 import {
   CategoryQueryVariables,
   CreateOrderItemInput,
   QueryRestaurantArgs,
   RestaurantQuery,
 } from "../../../gql/graphql";
+import { addApolloState, initializeApollo } from "../../../lib/apolloClient";
 
+const apolloClient = initializeApollo();
 const RESTAURANT_QUERY = gql`
   query restaurant($input: RestaurantInput!) {
     restaurant(input: $input) {
@@ -43,15 +49,30 @@ const CREATE_ORDER_MUTATION = gql`
 `;
 
 interface IRestaurantParams {
-  restaurantId: string;
+  restaurantId: number;
 }
-export const getServerSideProps: GetServerSideProps<{ params: IRestaurantParams }> = async(context) => {
-    return {
-        props: { params: {restaurantId:context.params?.restaurantId as string} }, // will be passed to the page component as props
-      }
-  }
+export const getServerSideProps: GetServerSideProps<{
+  params: IRestaurantParams;
+}> = async (context) => {
+   await apolloClient.query<RestaurantQuery, QueryRestaurantArgs>({
+    query: RESTAURANT_QUERY,
+    variables: {
+      input: {
+        restaurantId: +(context.params?.restaurantId || -1),
+      },
+    },
+  });
+  let params: IRestaurantParams = {
+    restaurantId: +(context.params?.restaurantId || -1),
+  };
+  console.log({ params });
+  
+  return addApolloState(apolloClient, {
+    props: { params }, // will be passed to the page component as props
+  });
+};
 
- const Restaurant:React.FC<{params:IRestaurantParams}> = ({params}) => {
+const Restaurant: React.FC<{params:IRestaurantParams}> = ({params }) => {
   const { loading, data } = useQuery<RestaurantQuery, QueryRestaurantArgs>(
     RESTAURANT_QUERY,
     {
@@ -149,8 +170,8 @@ export const getServerSideProps: GetServerSideProps<{ params: IRestaurantParams 
     }
   };
   const [createOrderMutation, { loading: placingOrder }] = useMutation<
-  CreateOrderMutation,
-  CreateOrderMutationVariables
+    CreateOrderMutation,
+    CreateOrderMutationVariables
   >(CREATE_ORDER_MUTATION, {
     onCompleted,
   });
@@ -174,11 +195,11 @@ export const getServerSideProps: GetServerSideProps<{ params: IRestaurantParams 
       });
     }
   };
-  console.log(data)
+  console.log(data, params);
   return (
     <div>
       <Head>
-        <title>{data?.restaurant?.restaurant?.name || ""} | Nuber Eats</title>
+        <title>{`${data?.restaurant?.restaurant?.name || ""} | Nuber Eats`}</title>
       </Head>
       <div
         className=" bg-gray-800 bg-center bg-cover py-48"
@@ -187,7 +208,9 @@ export const getServerSideProps: GetServerSideProps<{ params: IRestaurantParams 
         }}
       >
         <div className="bg-white xl:w-3/12 py-8 pl-48">
-          <h4 className="text-4xl mb-3">{data?.restaurant?.restaurant?.name}</h4>
+          <h4 className="text-4xl mb-3">
+            {data?.restaurant?.restaurant?.name}
+          </h4>
           <h5 className="text-sm font-light mb-2">
             {data?.restaurant?.restaurant?.category?.name}
           </h5>
@@ -250,4 +273,4 @@ export const getServerSideProps: GetServerSideProps<{ params: IRestaurantParams 
   );
 };
 
-export default  Restaurant;
+export default Restaurant;
