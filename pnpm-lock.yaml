@@ -127,16 +127,21 @@ importers:
       '@graphql-codegen/typescript-apollo-client-helpers': ^2.2.6
       '@graphql-typed-document-node/core': ^3.1.1
       '@next/font': 13.0.7
+      '@types/cookie': ^0.5.1
+      '@types/jsonwebtoken': ^8.5.9
       '@types/lodash': ^4.14.191
       '@types/node': ^16.0.0
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.9
       autoprefixer: ^10.4.13
+      cookie: ^0.5.0
       deepmerge: ^4.2.2
       eslint: ^8.0.1
       eslint-config-next: 13.0.7
       graphql: ^16.6.0
       graphql-modules: ^2.1.0
+      jose: ^4.11.2
+      jsonwebtoken: ^8.5.1
       lodash: ^4.17.21
       next: 13.0.7
       postcss: ^8.4.20
@@ -155,10 +160,13 @@ importers:
       '@types/node': 16.18.8
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.9
+      cookie: 0.5.0
       deepmerge: 4.2.2
       eslint: 8.29.0
       eslint-config-next: 13.0.7_ha6vam6werchizxrnqvarmz2zu
       graphql: 16.6.0
+      jose: 4.11.2
+      jsonwebtoken: 8.5.1
       lodash: 4.17.21
       next: 13.0.7_biqbaboplfbrettd7655fr4n2y
       precss: 4.0.0
@@ -171,6 +179,8 @@ importers:
       '@graphql-codegen/cli': 2.16.1_dl3nlj5afe4yd6kftus5b5umdm
       '@graphql-codegen/client-preset': 1.2.3_graphql@16.6.0
       '@graphql-codegen/typescript-apollo-client-helpers': 2.2.6_graphql@16.6.0
+      '@types/cookie': 0.5.1
+      '@types/jsonwebtoken': 8.5.9
       '@types/lodash': 4.14.191
       autoprefixer: 10.4.13_postcss@8.4.20
       graphql-modules: 2.1.0_graphql@16.6.0
@@ -3232,6 +3242,10 @@ packages:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
       '@types/node': 18.11.13
+
+  /@types/cookie/0.5.1:
+    resolution: {integrity: sha512-COUnqfB2+ckwXXSFInsFdOAWQzCCx+a5hq2ruyj+Vjund94RJQd4LG2u9hnvJrTgunKAaax7ancBYlDrNYxA0g==}
+    dev: true
 
   /@types/cookiejar/2.1.2:
     resolution: {integrity: sha512-t73xJJrvdTjXrn4jLS9VSGRbz0nUY3cl2DMGDU48lKl+HR9dbbjW2A9r3g40VA++mQpy6uuHg33gy7du2BKpog==}
@@ -7571,6 +7585,10 @@ packages:
       '@sideway/address': 4.1.4
       '@sideway/formula': 3.0.0
       '@sideway/pinpoint': 2.0.0
+
+  /jose/4.11.2:
+    resolution: {integrity: sha512-njj0VL2TsIxCtgzhO+9RRobBvws4oYyCM8TpvoUQwl/MbIM3NFJRR9+e6x0sS5xXaP1t6OCBkaBME98OV9zU5A==}
+    dev: false
 
   /js-base64/2.6.4:
     resolution: {integrity: sha512-pZe//GGmwJndub7ZghVHz7vjb2LgC1m8B07Au3eYqeqv9emhESByMXxaEgkUkEqJe87oBbSniGYoQNIBklc7IQ==}

@@ -2,31 +2,39 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
-import { useReactiveVar } from '@apollo/client';
+import { gql, useReactiveVar } from '@apollo/client';
 import { isLoggedInVar } from '../lib/apolloClient';
 import { graphql } from '../gql/gql';
 import { Header } from '../components/Header/Header';
 import { DarkModeToggle } from '../components/Toggle/DarkMode';
 import { useContext } from 'react';
 import { DarkModeContext, useDarkModeContext } from '../contexts/ModeContext';
+
 const inter = Inter({ subsets: ['latin'] })
 
-const IS_LOGGED_IN = graphql(/* GraphQL */ `
+const IS_LOGGED_IN = gql(/* GraphQL */ `
 query isLoggedIn {
   isLoggedIn @client
 }`);
+export function getServerSideProps(){
+  return {
+    props:{isLoggedIn:isLoggedInVar()}
+  }
+}
 
-export default function Home() {
+export default function Home({isLoggedIn}: {
+  isLoggedIn: boolean;
+} ){
   // const {
   //   data: {
   //     isLoggedIn,
   //   }
   // } = useQuery(IS_LOGGED_IN);
-  const isLoggedIn = useReactiveVar(isLoggedInVar);
+  // const  = useReactiveVar();
   const onClick = () => {
     isLoggedInVar(true);
   }
-  console.log("isLoggedIn ", isLoggedIn);
+  console.log("isLoggedIn---------> ", isLoggedIn);
   const themeContext =useDarkModeContext();
   return (
     <>

@@ -13,6 +13,7 @@ import { emailPatern } from '../common/patterns';
 import { LOCALSTORAGE_TOKEN } from "../common/constants";
 import { setLocalStorageItem } from "../utilities/localStorage";
 import { useDarkModeContext } from "../contexts/ModeContext";
+import { useRouter } from "next/router";
 interface ILoginForm {
   email: string;
   password: string;
@@ -32,6 +33,7 @@ export default function Login() {
       mode: "onChange",
     });
   const { errors } = formState;
+  const router = useRouter();
   const [loginMutation, { loading, error, data }] = useMutation<
     LoginMutation,
     LoginMutationVariables
@@ -42,7 +44,7 @@ export default function Login() {
     //     password: watch("password"),
     //   },
     // },
-    onCompleted(data, clientOptions?) {
+    async onCompleted(data, clientOptions?) {
       const {
         loginAccount: { ok, error, token },
       } = data;
@@ -50,6 +52,14 @@ export default function Login() {
         isLoggedInVar(true);
         setLocalStorageItem(LOCALSTORAGE_TOKEN, token);
         authTokenVar(token);
+        await fetch("/api/login", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        });
+        router.push('/')
       } else {
         isLoggedInVar(false);
       }
